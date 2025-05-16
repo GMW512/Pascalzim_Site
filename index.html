@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Pascalzim Online</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #f9f9f9;
+    }
+    textarea {
+      width: 100%;
+      height: 200px;
+      font-family: monospace;
+      font-size: 14px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+    }
+    pre {
+      background: #222;
+      color: #0f0;
+      padding: 15px;
+      margin-top: 20px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>Pascalzim Online</h1>
+  <p>Digite seu código Pascal:</p>
+  <textarea id="codigo">programa exemplo; inicio escreva("Olá, mundo!"); fim.</textarea><br>
+  <button onclick="executar()">Executar</button>
+  <h2>Saída:</h2>
+  <pre id="saida">...</pre>
+
+  <script>
+    async function executar() {
+      const codigo = document.getElementById('codigo').value;
+      document.getElementById('saida').innerText = 'Executando...';
+
+      try {
+        const resposta = await fetch('https://pascalzim-online.onrender.com/executar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ codigo })
+        });
+
+        const dados = await resposta.json();
+
+        document.getElementById('saida').innerText =
+          dados.saida || dados.erros || dados.erro || 'Sem resposta';
+      } catch (erro) {
+        document.getElementById('saida').innerText = 'Erro ao conectar com o servidor.';
+      }
+    }
+  </script>
+</body>
+</html>
